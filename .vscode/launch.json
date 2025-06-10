@@ -1,0 +1,74 @@
+{
+   // Use IntelliSense to find out which attributes exist for C# debugging
+   // Use hover for the description of the existing attributes
+   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+   "version": "0.2.0",
+   "configurations": [
+       {
+           "name": "TW.Vault.App",
+           "type": "coreclr",
+           "request": "launch",
+           "preLaunchTask": "buildweb",
+           "program": "${workspaceFolder}/app/TW.Vault.App/bin/Debug/netcoreapp2.0/TW.Vault/.App.dll",
+           "args": [],
+           "cwd": "${workspaceFolder}/app/TW.Vault.App",
+           "stopAtEntry": false,
+           "launchBrowser": {
+               "enabled": true,
+               "args": "https://v.tylercamp.me/dev-glen/script/main.js",
+               "windows": {
+                   "command": "cmd.exe",
+                   "args": "/C start ${auto-detect-url}"
+               },
+               "osx": {
+                   "command": "open"
+               },
+               "linux": {
+                   "command": "xdg-open"
+               }
+           },
+           "env": {
+               "ASPNETCORE_ENVIRONMENT": "Development",
+               "ConnectionStrings:Vault": "Server=v.tylercamp.me; Port=22342; Database=vault_dev; User Id=twu_vault; Password=!!TWV@ult4Us??",
+               "Security:MinimumRequiredPriveleges": "3",
+               "Serilog:WriteTo:2:Args:configure:0:Args:pathFormat": "../DevLogs/log-{Date}.log"
+           }
+       },
+        {
+            "name": "TW.Testing",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildconsole",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/app/TW.Testing/bin/Debug/netcoreapp2.0/TW.Testing.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/app/TW.Testing",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "TW.ConfigurationFetcher",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildconsole",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/app/TW.ConfigurationFetcher/bin/Debug/netcoreapp2.0/TW.ConfigurationFetcher.dll",
+            "args": [
+                ""
+            ],
+            "cwd": "${workspaceFolder}/app/TW.ConfigurationFetcher",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ,]
+}
