@@ -1,5 +1,4 @@
-﻿
-var lib = (() => {
+﻿var lib = (() => {
 
     //# REQUIRE lib/twstats.js
     //# REQUIRE lib/twcalc.js
@@ -179,11 +178,11 @@ var lib = (() => {
 
             const itlNoEscape = { _escaped: false };
 
-            var extraDateFormats = lib.translate(lib.itlcodes.TIME_EXTRA_DATE_FORMATS, itlNoEscape).split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            var extraTimeFormats = lib.translate(lib.itlcodes.TIME_EXTRA_TIME_FORMATS, itlNoEscape).split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            var extraDateFormats = lib.translate(lib.itlcodes.TIME_EXTRA_DATE_FORMATS, itlNoEscape).split(/[\n;]/).map(l => l.trim()).filter(l => l.length > 0);
+            var extraTimeFormats = lib.translate(lib.itlcodes.TIME_EXTRA_TIME_FORMATS, itlNoEscape).split(/[\n;]/).map(l => l.trim()).filter(l => l.length > 0);
 
             var extraFullFormats = lib.hasTranslation(lib.itlcodes.TIME_EXTRA_FULL_FORMATS)
-                ? lib.translate(lib.itlcodes.TIME_EXTRA_FULL_FORMATS, itlNoEscape).split('\n').map(l => l.trim()).filter(l => l.length > 0)
+                ? lib.translate(lib.itlcodes.TIME_EXTRA_FULL_FORMATS, itlNoEscape).split(/[\n;]/).map(l => l.trim()).filter(l => l.length > 0)
                 : [];
 
             let extraDateTimePermutations = extraDateFormats.map(d => extraTimeFormats.map(t => ({ date: d, time: t }))).flat();
