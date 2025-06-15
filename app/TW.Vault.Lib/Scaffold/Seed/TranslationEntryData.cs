@@ -639,7 +639,6 @@ namespace TW.Vault.Lib.Scaffold.Seed
             new TranslationEntry { TranslationId = 2, KeyId = 178, Value = "Enemy Tribes" },
             new TranslationEntry { TranslationId = 2, KeyId = 179, Value = "Tell the Vault which tribes to consider as \"enemies\" when determining which villages are back-line." },
             new TranslationEntry { TranslationId = 2, KeyId = 180, Value = "Add Enemy Tribe" },
-            new TranslationEntry { TranslationId = 2, KeyId = 181, Value = "Manage Users" },
 
             // TIME formats
             new TranslationEntry { TranslationId = 2, KeyId = 137, Value = "Érkezik" }, // LANDS_AT
@@ -1044,11 +1043,6 @@ namespace TW.Vault.Lib.Scaffold.Seed
             new TranslationEntry { TranslationId = 2, KeyId = 220, Value = "Lehetséges nemesek" }, // POSSIBLE_NOBLES
 
             // MISSING - BASIC UI LABELS
-            new TranslationEntry { TranslationId = 2, KeyId = 12, Value = "parancsok" }, // COMMANDS
-            new TranslationEntry { TranslationId = 2, KeyId = 13, Value = "bejövők" }, // INCOMINGS
-            new TranslationEntry { TranslationId = 2, KeyId = 14, Value = "jelentések" }, // REPORTS
-            new TranslationEntry { TranslationId = 2, KeyId = 15, Value = "csapatok" }, // TROOPS
-            new TranslationEntry { TranslationId = 2, KeyId = 16, Value = "Feltöltés szükséges:" }, // UPLOAD_NEEDED
         };
     }
 }
