@@ -5,11 +5,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TW.Vault.Lib.Security;
+using Serilog;
 
 namespace TW.Vault.Lib.Features
 {
     public class ScriptCompiler
     {
+        private static ILogger logger = Log.ForContext(typeof(ScriptCompiler));
         private static Regex RequireRegex = new Regex(@"^([ \t]*).*\/\/\#\s*REQUIRE\s+([^\n\r]+)", RegexOptions.Multiline | RegexOptions.Compiled);
         private static Regex CVarRegex = new Regex(@"`?%V<([^>]+)>`?", RegexOptions.Multiline | RegexOptions.Compiled);
 
@@ -66,9 +68,14 @@ namespace TW.Vault.Lib.Features
 
         private String CompileWithDependencies(String scriptName, List<String> resolvedDependencies, List<String> workingDependencies)
         {
+            logger.Information("Attempting to compile script: {scriptName}", scriptName);
             String scriptContents = DependencyResolver(scriptName);
             if (scriptContents == null)
+            {
+                logger.Warning("Failed to resolve script contents for: {scriptName}", scriptName);
                 return null;
+            }
+            logger.Information("Successfully read script: {scriptName}", scriptName);
 
             String scriptWithBakedVars = BakeCompileVars(scriptContents);
 
@@ -81,11 +88,17 @@ namespace TW.Vault.Lib.Features
 
                 var spacing = match.Groups[1].Value;
                 var dependentFileName = match.Groups[2].Value;
+                logger.Information("Found dependency in {scriptName}: {dependentFileName}", scriptName, dependentFileName);
+
                 if (resolvedDependencies.Contains(dependentFileName))
+                {
+                    logger.Debug("Dependency already resolved: {dependentFileName}", dependentFileName);
                     return "";
+                }
 
                 if (workingDependencies.Contains(dependentFileName))
                 {
+                    logger.Warning("Circular dependency detected: {chain}", String.Join(" -> ", workingDependencies.Concat(new[] { dependentFileName })));
                     OnCircularDependency?.Invoke(workingDependencies.Concat(new[] { dependentFileName }).ToArray());
                     canContinue = false;
                     return "";
@@ -97,11 +110,13 @@ namespace TW.Vault.Lib.Features
 
                 if (compiledDependency == null)
                 {
+                    logger.Warning("Failed to compile dependency: {dependentFileName}", dependentFileName);
                     canContinue = false;
                     return "";
                 }
 
                 resolvedDependencies.Add(dependentFileName);
+                logger.Information("Successfully compiled dependency: {dependentFileName}", dependentFileName);
 
                 var scriptLines = compiledDependency.Split('\n');
                 var formattedDependency = new StringBuilder();
