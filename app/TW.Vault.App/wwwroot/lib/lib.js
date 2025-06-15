@@ -157,6 +157,21 @@ var lib = (() => {
                 .filter(t => t.length > 0)
                 .map(m => m.trim().toLowerCase())
                 ;
+            // Add Hungarian month abbreviations as fallback
+            var hungarianMonths = {
+                'jan.': 1, 'január': 1,
+                'feb.': 2, 'február': 2, 'febr.': 2,
+                'márc.': 3, 'március': 3,
+                'ápr.': 4, 'április': 4,
+                'máj.': 5, 'május': 5,
+                'jún.': 6, 'június': 6,
+                'júl.': 7, 'július': 7,
+                'aug.': 8, 'augusztus': 8,
+                'szept.': 9, 'szeptember': 9,
+                'okt.': 10, 'október': 10,
+                'nov.': 11, 'november': 11,
+                'dec.': 12, 'december': 12
+            };
             //var monthStrings = nativeTranslations.Time_MonthShorthands;
 
             var serverDate = new Date(Timing.getCurrentServerTime());
@@ -173,7 +188,7 @@ var lib = (() => {
                 millis: '\\d+',
                 day: '\\d+',
                 month: '\\d+',
-                monthName: `(?:${monthStrings.join('|')})`,
+                monthName: `(?:${monthStrings.join('|')}|${Object.keys(hungarianMonths).join('|')})`,
                 year: '\\d+'
             };
 
@@ -284,6 +299,13 @@ var lib = (() => {
             if (match.monthName && monthStrings.indexOf(match.monthName.toLowerCase()) >= 0) {
                 match.month = monthStrings.indexOf(match.monthName.toLowerCase()) + 1;
                 delete match.monthName;
+            } else if (match.monthName) {
+                // Check Hungarian months fallback
+                var monthNameLower = match.monthName.toLowerCase();
+                if (hungarianMonths[monthNameLower]) {
+                    match.month = hungarianMonths[monthNameLower];
+                    delete match.monthName;
+                }
             }
 
             Object.keys(match).forEach((k) => typeof match[k] != 'number' ? match[k] = parseInt(match[k]) : null);
