@@ -293,6 +293,66 @@ var lib = (() => {
             */
 
             if (match.year && match.year.length == 2) {
+        // Handle time-first format HH:mm:ss DD/MM/YYYY (before Hungarian patterns)
+        if (!match && dateString) {
+            var simpleTimeFirst = dateString.match(/^(\d{1,2}):(\d{2}):(\d{2})\s+(\d{1,2})/(\d{1,2})/(\d{4})$/);
+            if (simpleTimeFirst) {
+                match = {
+                    hour: parseInt(simpleTimeFirst[1]),
+                    minute: parseInt(simpleTimeFirst[2]),
+                    second: parseInt(simpleTimeFirst[3]),
+                    date: parseInt(simpleTimeFirst[4]),
+                    month: parseInt(simpleTimeFirst[5]),
+                    year: parseInt(simpleTimeFirst[6])
+                };
+            }
+        }
+
+
+        // Hungarian relative date formats (ma ekkor, holnap ekkor)
+        if (!match && dateString) {
+            // Handle "holnap ekkor: HH:mm:ss:ms" (tomorrow at)
+            var holnapMatch = dateString.match(/^holnap ekkor:\s*(\d{1,2}):(\d{2}):(\d{2})(?::(\d{3}))?$/i);
+            if (holnapMatch) {
+                var tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                match = {
+                    year: tomorrow.getFullYear(),
+                    month: tomorrow.getMonth() + 1,
+                    date: tomorrow.getDate(),
+                    hour: parseInt(holnapMatch[1]),
+                    minute: parseInt(holnapMatch[2]),
+                    second: parseInt(holnapMatch[3])
+                };
+            }
+            
+            // Handle "ma ekkor: HH:mm:ss:ms" (today at)
+            var maMatch = dateString.match(/^ma ekkor:\s*(\d{1,2}):(\d{2}):(\d{2})(?::(\d{3}))?$/i);
+            if (maMatch) {
+                var today = new Date();
+                match = {
+                    year: today.getFullYear(),
+                    month: today.getMonth() + 1,
+                    date: today.getDate(),
+                    hour: parseInt(maMatch[1]),
+                    minute: parseInt(maMatch[2]),
+                    second: parseInt(maMatch[3])
+                };
+            }
+            
+            // Handle "HH:mm:ss DD/MM/YYYY" format
+            var timeFirstMatch = dateString.match(/^(\d{1,2}):(\d{2}):(\d{2})\s*(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+            if (timeFirstMatch) {
+                match = {
+                    hour: parseInt(timeFirstMatch[1]),
+                    minute: parseInt(timeFirstMatch[2]),
+                    second: parseInt(timeFirstMatch[3]),
+                    date: parseInt(timeFirstMatch[4]),
+                    month: parseInt(timeFirstMatch[5]),
+                    year: parseInt(timeFirstMatch[6])
+                };
+            }
+        }
                 match.year = '20' + match.year;
             }
 

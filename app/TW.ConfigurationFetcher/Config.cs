@@ -39,7 +39,7 @@ namespace TW.ConfigurationFetcher
 
         private static Dictionary<String, String> ParseConnectionString(String connectionString)
         {
-            return connectionString.Split(";").Select(s => s.Trim()).ToDictionary(s => s.Split('=')[0], s => s.Split('=')[1]);
+            var dict = new Dictionary<string, string>(); foreach(var part in connectionString.Split(";")) { var trimmed = part.Trim(); if(!string.IsNullOrEmpty(trimmed)) { var idx = trimmed.IndexOf("="); if(idx > 0) dict[trimmed.Substring(0, idx)] = trimmed.Substring(idx + 1); } } return dict;
         }
 
         public override string ToString()
